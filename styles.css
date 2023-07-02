@@ -1,0 +1,35 @@
+body {
+  text-align: center;
+}
+
+h1 {
+  color: #333;
+}
+
+#board {
+  display: inline-block;
+  margin-top: 20px;
+  border: 5px solid #333;
+  background-color: rgb(236, 205, 148) ;
+}
+
+.row {
+  display: flex;
+}
+
+.cell {
+  width: 100px;
+  height: 100px;
+  border: 5px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  font-family: cursive;
+  cursor: pointer;
+}
+
+button {
+  display: block;
+  margin: 20px auto;
+}
