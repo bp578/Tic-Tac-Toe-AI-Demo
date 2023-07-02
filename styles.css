@@ -1,5 +1,7 @@
 body {
   text-align: center;
+  background-color: lightblue;
+  font-family: sans-serif;
 }
 
 h1 {
@@ -26,6 +28,7 @@ h1 {
   justify-content: center;
   font-size: 40px;
   font-family: cursive;
+  font-style: bold;
   cursor: pointer;
 }
 
