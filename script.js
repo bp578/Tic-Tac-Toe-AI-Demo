@@ -17,6 +17,10 @@ function handleCellClick(event) {
   if (!cell.textContent && !isGameOver) {
     cell.textContent = currentPlayer;
 
+    if (currentPlayer == 'X'){
+      cell.style.color = "red";
+    }
+
     // Check for a winning move
     if (checkForWin()) {
       isGameOver = true;
@@ -67,6 +71,7 @@ function resetGame() {
 
   for (let cell of cells) {
     cell.textContent = '';
+    cell.style.color = "black"
   }
 }
 
