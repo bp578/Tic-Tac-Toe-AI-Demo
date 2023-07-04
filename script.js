@@ -37,9 +37,20 @@ function handleCellClick(event) {
       turn.textContent = "Draw";
     }
 
+    console.log(getState());
+
     // Switch players
     currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
   }
+}
+
+function getState(){
+  let array = []
+  for (let cell of cells){
+    array.push(cell.textContent);
+  }
+
+  return array;
 }
 
 // Function to check for a winning move
