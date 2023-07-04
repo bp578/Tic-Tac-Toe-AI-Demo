@@ -1,5 +1,6 @@
 // Define variables
 const board = document.getElementById('board');
+const turn = document.getElementById('turn');
 const cells = document.getElementsByClassName('cell');
 const resetButton = document.getElementById('reset');
 let currentPlayer = 'X';
@@ -19,15 +20,21 @@ function handleCellClick(event) {
 
     if (currentPlayer == 'X'){
       cell.style.color = "red";
+      turn.textContent = "Player O turn"
+    } else {
+      cell.style.color = "black";
+      turn.textContent = "Player X turn"
     }
 
     // Check for a winning move
     if (checkForWin()) {
       isGameOver = true;
       alert(`Player ${currentPlayer} wins!`);
+      turn.textContent = `Player ${currentPlayer} won!`;
     } else if (checkForDraw()) {
       isGameOver = true;
       alert('The game is a draw!');
+      turn.textContent = "Draw";
     }
 
     // Switch players
@@ -68,10 +75,10 @@ function checkForDraw() {
 function resetGame() {
   currentPlayer = 'X';
   isGameOver = false;
+  turn.textContent = "Player X turn"
 
   for (let cell of cells) {
     cell.textContent = '';
-    cell.style.color = "black"
   }
 }
 
