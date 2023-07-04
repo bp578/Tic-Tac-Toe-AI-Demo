@@ -44,6 +44,7 @@ function handleCellClick(event) {
   }
 }
 
+//Returns the current game state 
 function getState(){
   let array = []
   for (let cell of cells){
@@ -51,6 +52,50 @@ function getState(){
   }
 
   return array;
+}
+
+function evaluateState(){
+  let state = getState();
+  const winningCombinations = [
+    [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+    [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+    [0, 4, 8], [2, 4, 6] // Diagonals
+  ];
+  let X1 = 0;
+  let X2 = 0;
+  let O1 = 0;
+  let O2 = 0;
+
+  //Go through every row, column, and diagonal
+  for (let combination of winningCombinations) {
+    let numberOfX = 0;
+    let numberOfO = 0;
+    const [a, b, c] = combination;
+    let arrayToRead = [cells[a].textContent, cells[b].textContent, cells[c].textContent];
+
+    //Count the number of X's and O's in each combination
+    for (let element of arrayToRead){
+      if (element === "X"){
+        numberOfX += 1;
+      } else if (element === "O"){
+        numberOfO += 1;
+      }
+    }
+
+    //Add X1, X2, O1, O2 accordingly
+    if (numberOfX === 1 && numberOfO === 0){
+      X1 += 1;
+    } else if (numberOfX === 2 && numberOfO === 0){
+      X2 += 1;
+    } else if (numberOfX === 0 && numberOfO === 1){
+      O1 += 1;
+    } else if (numberOfX === 0 && numberOfO === 2){
+      O2 += 1;
+    }
+    
+  }
+
+  return (3 * X2) + X1 - ((3 * O2) + O1);
 }
 
 // Function to check for a winning move
