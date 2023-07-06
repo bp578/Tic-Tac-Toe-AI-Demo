@@ -54,6 +54,25 @@ function getState(){
   return array;
 }
 
+//Return an array of indices indicating possible moves to take
+function generateMoves(){
+  let state = getState();
+  let moves = [];
+
+  for(let i = 0; i < state.length; i++){
+    if (state[i] === ''){
+      moves.push(i);
+    }
+  }
+
+  return moves;
+}
+
+
+
+//Assigns a value to the current state based on how optimal it is
+//Higher value: Most optimal for player X
+//Lower value: Most optimal for player O
 function evaluateState(){
   let state = getState();
   const winningCombinations = [
