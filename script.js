@@ -159,6 +159,11 @@ function checkForDraw() {
   return true;
 }
 
+// Check if game is win or tie
+function checkGameOver(){
+  return
+}
+
 // Function to reset the game
 function resetGame() {
   currentPlayer = 'X';
@@ -168,6 +173,10 @@ function resetGame() {
   for (let cell of cells) {
     cell.textContent = '';
   }
+}
+
+function alphaBeta(depth, ){
+  let currentDepth = depth;
 }
 
 // Reset the game initially
