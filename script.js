@@ -27,20 +27,23 @@ function handleCellClick(event) {
     }
 
     // Check for a winning move
-    if (checkForWin()) {
+    if (checkForWin(getState())) {
       isGameOver = true;
       alert(`Player ${currentPlayer} wins!`);
       turn.textContent = `Player ${currentPlayer} won!`;
-    } else if (checkForDraw()) {
+    } else if (checkForDraw(getState())) {
       isGameOver = true;
       alert('The game is a draw!');
       turn.textContent = "Draw";
     }
 
-    console.log(getState());
+    //console.log(getState());
 
     // Switch players
     currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+
+    //AI makes a move:
+    applyMoveToBoard(alphaBeta(getState(), -Infinity, Infinity, 3, 3, false));
   }
 }
 
@@ -55,8 +58,7 @@ function getState(){
 }
 
 //Return an array of indices indicating possible moves to take
-function generateMoves(){
-  let state = getState();
+function generateMoves(state){
   let moves = [];
 
   for(let i = 0; i < state.length; i++){
@@ -73,8 +75,7 @@ function generateMoves(){
 //Assigns a value to the current state based on how optimal it is
 //Higher value: Most optimal for player X
 //Lower value: Most optimal for player O
-function evaluateState(){
-  let state = getState();
+function evaluateState(state){
   const winningCombinations = [
     [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
     [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
@@ -90,7 +91,7 @@ function evaluateState(){
     let numberOfX = 0;
     let numberOfO = 0;
     const [a, b, c] = combination;
-    let arrayToRead = [cells[a].textContent, cells[b].textContent, cells[c].textContent];
+    let arrayToRead = [state[a], state[b], state[c]];
 
     //Count the number of X's and O's in each combination
     for (let element of arrayToRead){
@@ -118,7 +119,7 @@ function evaluateState(){
 }
 
 // Function to check for a winning move
-function checkForWin() {
+function checkForWin(state) {
   const winningCombinations = [
     [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
     [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
@@ -127,7 +128,7 @@ function checkForWin() {
 
   for (let combination of winningCombinations) {
     const [a, b, c] = combination;
-    if (cells[a].textContent && cells[a].textContent === cells[b].textContent && cells[a].textContent === cells[c].textContent) {
+    if (state[a] && state[a] === state[b] && state[a] === state[c]) {
       return true;
     }
   }
@@ -136,14 +137,19 @@ function checkForWin() {
 }
 
 // Function to check for a draw
-function checkForDraw() {
-  for (let cell of cells) {
-    if (!cell.textContent) {
+function checkForDraw(state) {
+  for (let cell of state) {
+    if (cell === '') {
       return false;
     }
   }
 
   return true;
+}
+
+// Check if game is win or tie
+function checkGameOver(state){
+  return checkForWin(state) || checkForDraw(state);
 }
 
 // Function to reset the game
@@ -154,6 +160,93 @@ function resetGame() {
 
   for (let cell of cells) {
     cell.textContent = '';
+  }
+}
+
+function applyMoveCloning(state, move, player){
+  let stateCopy = JSON.parse(JSON.stringify(state));
+  if (stateCopy[move] === ''){
+    stateCopy[move] = player;
+  }
+  return stateCopy;
+}
+
+function applyMoveToBoard(move){
+  let cell = cells[move]
+  if (!cell.textContent){
+    if (currentPlayer == 'X'){
+      cell.style.color = "red";
+      turn.textContent = "Player O turn"
+    } else {
+      cell.style.color = "black";
+      turn.textContent = "Player X turn"
+    }
+    cell.textContent = currentPlayer;
+  }
+
+  // Switch players
+  currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+  
+}
+
+
+function alphaBeta(state, alpha, beta, initialDepth, currentDepth, maximizingPlayer){
+  //Return the state's value when depth is 0 or state is terminal
+  if (currentDepth === 0 || checkGameOver(state)){
+    return evaluateState(state);
+  }
+      
+  if (maximizingPlayer){
+    let bestValue = -Infinity;
+    let bestMove;
+
+    for (let move of generateMoves(state)){
+      let childState = applyMoveCloning(state, move, "X");
+      let value = alphaBeta(childState, alpha, beta, initialDepth, currentDepth - 1, false);
+      alpha = Math.max(alpha, value);
+
+      if (value > bestValue){
+        bestValue = value;
+        bestMove = move;
+      }
+
+      //Beta Pruning
+      if (value >= beta){
+        break;
+      }
+  }
+    
+    if (currentDepth == initialDepth){
+      return bestMove
+    } else {
+      return bestValue
+    }  
+    
+  } else {
+    let bestValue = Infinity;
+    let bestMove;
+
+    for (let move of generateMoves(state)){
+      let childState = applyMoveCloning(state, move, "O");
+      let value = alphaBeta(childState, alpha, beta, initialDepth, currentDepth - 1, true);
+      beta = Math.min(beta, value);
+
+      if (value < bestValue){
+        bestValue = value;
+        bestMove = move;
+      }
+
+      //Alpha Pruning
+      if (value <= alpha){
+        break;
+      }
+  }
+    
+    if (currentDepth == initialDepth){
+      return bestMove
+    } else {
+      return bestValue
+    }
   }
 }
 
