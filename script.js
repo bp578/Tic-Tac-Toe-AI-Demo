@@ -76,6 +76,19 @@ function generateMoves(state) {
   return moves;
 }
 
+//Return an array of arrays of all possible states from all possible moves
+function childrenStates(){
+  let moves = generateMoves();
+  let children = [];
+
+  for (let move in moves){
+    let state = getState();
+    state[move] = currentPlayer;
+    children.push(state);
+  }
+
+  return childrenStates();
+}
 
 
 //Assigns a value to the current state based on how optimal it is
@@ -266,7 +279,7 @@ function alphaBeta(state, alpha, beta, initialDepth, currentDepth, maximizingPla
       return bestValue
     }
   }
-}
+
 
 // Reset the game initially
 resetGame();
