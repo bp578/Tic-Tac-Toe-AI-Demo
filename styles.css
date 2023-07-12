@@ -37,3 +37,22 @@ button {
   display: block;
   margin: 20px auto;
 }
+
+.scoreboard {
+    display: grid;
+    grid-template-columns: auto auto;
+}
+
+#playerXScore{
+  color: red;
+  font-size: 25px;
+  font-family: sans-serif;
+  font-weight: bold;
+}
+
+#playerOScore{
+  color: #333;
+  font-size: 25px;
+  font-family: sans-serif;
+  font-weight: bold;
+}
