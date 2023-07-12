@@ -5,6 +5,8 @@ const cells = document.getElementsByClassName('cell');
 const resetButton = document.getElementById('reset');
 let currentPlayer = 'X';
 let isGameOver = false;
+let xScore = 0;
+let oScore = 0;
 
 // Add event listeners
 board.addEventListener('click', handleCellClick);
@@ -17,20 +19,16 @@ function handleCellClick(event) {
   // Check if the cell is empty and the game is not over
   if (!cell.textContent && !isGameOver) {
     cell.textContent = currentPlayer;
+    cell.style.color = "red";
+    turn.textContent = "Player O turn"
 
-    if (currentPlayer == 'X'){
-      cell.style.color = "red";
-      turn.textContent = "Player O turn"
-    } else {
-      cell.style.color = "black";
-      turn.textContent = "Player X turn"
-    }
 
     // Check for a winning move
     if (checkForWin(getState())) {
       isGameOver = true;
-      alert(`Player ${currentPlayer} wins!`);
-      turn.textContent = `Player ${currentPlayer} won!`;
+      alert(`Player X wins!`);
+      turn.textContent = `Player X won!`;
+      xScore++;
     } else if (checkForDraw(getState())) {
       isGameOver = true;
       alert('The game is a draw!');
@@ -111,6 +109,10 @@ function evaluateState(state){
       O1 += 1;
     } else if (numberOfX === 0 && numberOfO === 2){
       O2 += 1;
+    } else if (numberOfX === 3){
+      return Infinity;
+    } else if (numberOfO === 3){
+      return -Infinity;
     }
     
   }
@@ -171,18 +173,25 @@ function applyMoveCloning(state, move, player){
   return stateCopy;
 }
 
+//AI can make moves to the board
 function applyMoveToBoard(move){
   let cell = cells[move]
   if (!cell.textContent){
-    if (currentPlayer == 'X'){
-      cell.style.color = "red";
-      turn.textContent = "Player O turn"
-    } else {
-      cell.style.color = "black";
-      turn.textContent = "Player X turn"
-    }
+    cell.style.color = "red";
+    turn.textContent = "Player X turn"
     cell.textContent = currentPlayer;
   }
+
+  if (checkForWin(getState())) {
+      isGameOver = true;
+      alert(`Player O wins!`);
+      turn.textContent = `Player O won!`;
+      oScore++;
+    } else if (checkForDraw(getState())) {
+      isGameOver = true;
+      alert('The game is a draw!');
+      turn.textContent = "Draw";
+    }
 
   // Switch players
   currentPlayer = currentPlayer === 'X' ? 'O' : 'X';

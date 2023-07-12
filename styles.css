@@ -37,3 +37,8 @@ button {
   display: block;
   margin: 20px auto;
 }
+
+.grid-container {
+    display: grid;
+    grid-template-columns: auto auto;
+  }
